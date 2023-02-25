@@ -1,6 +1,7 @@
 #################
 ## Eclipse
 #################
+words/
 .idea
 *.pydevproject
 .project

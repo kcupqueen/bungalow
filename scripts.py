@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from anki.services import CardService
 from mdict_query import IndexBuilder
 from bs4 import BeautifulSoup
 
@@ -104,6 +105,7 @@ def read_words(file_path: str):
 
 
 if __name__ == '__main__':
+    card_service = CardService(ip='127.0.0.1')
     words = read_words('./words/words.txt')
     builder = IndexBuilder('E:\Game\En101\midict\Android\longman.mdx')
     for word in words:
@@ -119,3 +121,4 @@ if __name__ == '__main__':
         # print_formatted(text)
         content = parse_pattern(text, word)
         print_formatted(content.to_html())
+        card_service.add_to_anki(word, content.to_html())
