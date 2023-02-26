@@ -77,6 +77,9 @@ def parse_pattern(string: str, raw_word: str):
         sense_def = sense_new_line.find_next('span', {'class': 'def'})
         en = sense_def.find_next('en')
         trans = sense_def.find_next('tran')
+        if en is None or trans is None:
+            print(f'can not find definition for {raw_word}')
+            continue
         _word.add_sense(en.text.strip() + " " + trans.text.strip())
 
         sense_example = sense_new_line.findAll('span', {'class': 'example'})
@@ -100,6 +103,11 @@ def read_words(file_path: str):
     for word in words:
         word = word.strip()
         # example: 9@budge@v.  移动； 妥协 n.  羔皮 adj.  浮夸的； 庄严的
+        if not word:
+            continue
+        if word.count('@') < 2:
+            print(f'line {word} is not valid')
+            continue
         word = word.split('@')[1]
         yield word
 
@@ -110,6 +118,9 @@ if __name__ == '__main__':
     builder = IndexBuilder('E:\Game\En101\midict\Android\longman.mdx')
     for word in words:
         result_text = builder.mdx_lookup(word)
+        if not result_text:
+            print(f'can not find word: {word}')
+            continue
         text = result_text[0]
         if link_to_word(text):
             word = link_to_word(text).strip()
